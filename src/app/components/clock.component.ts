@@ -1,5 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component } from "@angular/core";
+import { toSignal } from '@angular/core/rxjs-interop';
+import { interval, map } from 'rxjs';
 
 @Component({
   selector: 'app-clock',
@@ -7,7 +9,7 @@ import { Component } from "@angular/core";
   imports: [DatePipe],
   template: `
     <div class="clock">
-      <!-- {{clock() | date : 'H:mm:ss'}} -->
+      {{ clock() | date : 'H:mm:ss' }}
     </div>
   `,
   styles: `
@@ -19,4 +21,8 @@ import { Component } from "@angular/core";
   `
 })
 export class ClockComponent {
+  clock = toSignal(
+    interval(1000).pipe(map(() => new Date())),
+    { initialValue: new Date() }
+  );
 }
